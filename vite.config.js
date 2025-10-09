@@ -3,6 +3,6 @@ import react from "@vitejs/plugin-react";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/new-2d-portfolio",
+  base: "/",
   plugins: [react()],
 });
