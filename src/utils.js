@@ -1,3 +1,5 @@
+
+// comment
 export async function makeAppear(k, gameObj) {
   await k.tween(
     gameObj.opacity,
