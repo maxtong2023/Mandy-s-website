@@ -43,6 +43,10 @@ export default function makePlayer(k, posVec2, speed) {
   });
 
   player.onUpdate(() => {
+    // Update z-index based on Y position for proper layering
+    // Add offset to keep z-index positive
+    player.z = player.pos.y + 10000;
+
     if (!k.camPos().eq(player.pos)) {
       k.tween(
         k.camPos(),
