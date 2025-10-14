@@ -1,25 +1,11 @@
 import makeKaplayCtx from "./kaplayCtx";
 import makePlayer from "./entities/Player";
-import makeSection from "./components/Section";
+import makeNpc from "./entities/Npc";
 import { PALETTE } from "./constants";
-import makeSocialIcon from "./components/SocialIcon";
-import makeSkillIcon from "./components/SkillIcon";
-import { makeAppear } from "./utils";
-import makeWorkExperienceCard from "./components/WorkExperienceCard";
-import makeEmailIcon from "./components/EmailIcon";
-import makeProjectCard from "./components/ProjectCard";
 import { cameraZoomValueAtom, store } from "./store";
+import initNpcInteractionSystem from "./systems/NpcInteractionSystem";
 
 export default async function initGame() {
-  const generalData = await (await fetch("./configs/generalData.json")).json();
-  const skillsData = await (await fetch("./configs/skillsData.json")).json();
-  const socialsData = await (await fetch("./configs/socialsData.json")).json();
-  const experiencesData = await (
-    await fetch("./configs/experiencesData.json")
-  ).json();
-  const projectsData = await (
-    await fetch("./configs/projectsData.json")
-  ).json();
 
   const k = makeKaplayCtx();
   k.loadSprite("player", "./sprites/player.png", {
@@ -44,26 +30,7 @@ export default async function initGame() {
       "walk-right-down-idle": 28,
     },
   });
-  k.loadFont("ibm-regular", "./fonts/IBMPlexSans-Regular.ttf");
   k.loadFont("ibm-bold", "./fonts/IBMPlexSans-Bold.ttf");
-  k.loadSprite("github-logo", "./logos/github-logo.png");
-  k.loadSprite("linkedin-logo", "./logos/linkedin-logo.png");
-  k.loadSprite("youtube-logo", "./logos/youtube-logo.png");
-  k.loadSprite("x-logo", "./logos/x-logo.png");
-  k.loadSprite("substack-logo", "./logos/substack-logo.png");
-  k.loadSprite("javascript-logo", "./logos/js-logo.png");
-  k.loadSprite("typescript-logo", "./logos/ts-logo.png");
-  k.loadSprite("react-logo", "./logos/react-logo.png");
-  k.loadSprite("nextjs-logo", "./logos/nextjs-logo.png");
-  k.loadSprite("postgres-logo", "./logos/postgres-logo.png");
-  k.loadSprite("html-logo", "./logos/html-logo.png");
-  k.loadSprite("css-logo", "./logos/css-logo.png");
-  k.loadSprite("tailwind-logo", "./logos/tailwind-logo.png");
-  k.loadSprite("python-logo", "./logos/python-logo.png");
-  k.loadSprite("email-logo", "./logos/email-logo.png");
-  k.loadSprite("sonic-js", "./projects/sonic-js.png");
-  k.loadSprite("kirby-ts", "./projects/kirby-ts.png");
-  k.loadSprite("platformer-js", "./projects/platformer-js.png");
   k.loadShaderURL("tiledPattern", null, "./shaders/tiledPattern.frag");
 
   const setInitCamZoomValue = () => {
@@ -102,126 +69,15 @@ export default async function initGame() {
     tiledBackground.uniform.u_aspect = k.width() / k.height();
   });
 
-  makeSection(
-    k,
-    k.vec2(k.center().x, k.center().y - 400),
-    generalData.section1Name,
-    (parent) => {
-      const container = parent.add([k.pos(-805, -700), k.opacity(0)]);
+  const player = makePlayer(k, k.vec2(k.center()), 700);
 
-      container.add([
-        k.text(generalData.header.title, { font: "ibm-bold", size: 88 }),
-        k.color(k.Color.fromHex(PALETTE.color1)),
-        k.pos(395, 0),
-        k.opacity(0),
-      ]);
+  // Create NPCs around the center with different idle directions
+  makeNpc(k, k.vec2(k.center().x + 300, k.center().y), "NPC 1", "walk-left");
+  makeNpc(k, k.vec2(k.center().x - 300, k.center().y), "NPC 2", "walk-right");
+  makeNpc(k, k.vec2(k.center().x, k.center().y - 300), "NPC 3", "walk-down");
+  makeNpc(k, k.vec2(k.center().x, k.center().y + 300), "NPC 4", "walk-up");
+  makeNpc(k, k.vec2(k.center().x + 200, k.center().y - 200), "NPC 5", "walk-left-down");
 
-      container.add([
-        k.text(generalData.header.subtitle, {
-          font: "ibm-bold",
-          size: 48,
-        }),
-        k.color(k.Color.fromHex(PALETTE.color1)),
-        k.pos(485, 100),
-        k.opacity(0),
-      ]);
-
-      const socialContainer = container.add([k.pos(130, 0), k.opacity(0)]);
-
-      for (const socialData of socialsData) {
-        if (socialData.name === "Email") {
-          makeEmailIcon(
-            k,
-            socialContainer,
-            k.vec2(socialData.pos.x, socialData.pos.y),
-            socialData.logoData,
-            socialData.name,
-            socialData.address
-          );
-          continue;
-        }
-
-        makeSocialIcon(
-          k,
-          socialContainer,
-          k.vec2(socialData.pos.x, socialData.pos.y),
-          socialData.logoData,
-          socialData.name,
-          socialData.link,
-          socialData.description
-        );
-      }
-
-      makeAppear(k, container);
-      makeAppear(k, socialContainer);
-    }
-  );
-  makeSection(
-    k,
-    k.vec2(k.center().x - 400, k.center().y),
-    generalData.section2Name,
-    (parent) => {
-      /* make the container independent of the section
-       so that the skill icons appear on top of every section's children.
-       so that when the skill icons are pushed around by the player
-       they always remain on top */
-      const container = k.add([
-        k.opacity(0),
-        k.pos(parent.pos.x - 300, parent.pos.y),
-      ]);
-
-      for (const skillData of skillsData) {
-        makeSkillIcon(
-          k,
-          container,
-          k.vec2(skillData.pos.x, skillData.pos.y),
-          skillData.logoData,
-          skillData.name
-        );
-      }
-
-      makeAppear(k, container);
-    }
-  );
-  makeSection(
-    k,
-    k.vec2(k.center().x + 400, k.center().y),
-    generalData.section3Name,
-    (parent) => {
-      const container = parent.add([k.opacity(0), k.pos(0)]);
-      for (const experienceData of experiencesData) {
-        makeWorkExperienceCard(
-          k,
-          container,
-          k.vec2(experienceData.pos.x, experienceData.pos.y),
-          experienceData.cardHeight,
-          experienceData.roleData
-        );
-      }
-
-      makeAppear(k, container);
-    }
-  );
-  makeSection(
-    k,
-    k.vec2(k.center().x, k.center().y + 400),
-    generalData.section4Name,
-    (parent) => {
-      const container = parent.add([k.opacity(0), k.pos(0, 0)]);
-
-      for (const project of projectsData) {
-        makeProjectCard(
-          k,
-          container,
-          k.vec2(project.pos.x, project.pos.y),
-          project.data,
-          project.thumbnail
-        );
-      }
-
-      makeAppear(k, container);
-    }
-  );
-
-  makePlayer(k, k.vec2(k.center()), 700);
+  // Initialize the NPC interaction system
+  initNpcInteractionSystem(k, player);
 }
