@@ -5,7 +5,7 @@ import {
   store,
 } from "../store";
 
-export default function makeNpc(k, posVec2, name, idleDirection = "walk-down") {
+export default function makeNpc(k, posVec2, name, idleDirection = "walk-down", dialogue = []) {
   const npc = k.add([
     k.sprite("player", { anim: `${idleDirection}-idle` }),
     k.scale(8),
@@ -19,6 +19,7 @@ export default function makeNpc(k, posVec2, name, idleDirection = "walk-down") {
       npcName: name,
       idleDirection: idleDirection,
       interactionIndicator: null,
+      dialogue: dialogue, // Array of dialogue sentences
     },
   ]);
 

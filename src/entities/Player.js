@@ -3,6 +3,7 @@ import {
   isEmailModalVisibleAtom,
   isProjectModalVisibleAtom,
   isSocialModalVisibleAtom,
+  isDialogueActiveAtom,
   store,
 } from "../store";
 
@@ -60,9 +61,15 @@ export default function makePlayer(k, posVec2, speed) {
     if (
       store.get(isSocialModalVisibleAtom) ||
       store.get(isEmailModalVisibleAtom) ||
-      store.get(isProjectModalVisibleAtom)
-    )
+      store.get(isProjectModalVisibleAtom) ||
+      store.get(isDialogueActiveAtom)
+    ) {
+      // Force player to idle state when dialogue or modals are active
+      if (!player.getCurAnim().name.includes("idle")) {
+        player.play(`${player.directionName}-idle`);
+      }
       return;
+    }
 
     player.direction = k.vec2(0, 0);
     const worldMousePos = k.toWorld(k.mousePos());

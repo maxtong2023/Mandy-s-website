@@ -31,6 +31,7 @@ export default async function initGame() {
     },
   });
   k.loadFont("ibm-bold", "./fonts/IBMPlexSans-Bold.ttf");
+  k.loadFont("determination", "./fonts/Determination.ttf");
   k.loadShaderURL("tiledPattern", null, "./shaders/tiledPattern.frag");
 
   const setInitCamZoomValue = () => {
@@ -71,12 +72,68 @@ export default async function initGame() {
 
   const player = makePlayer(k, k.vec2(k.center()), 700);
 
-  // Create NPCs around the center with different idle directions
-  makeNpc(k, k.vec2(k.center().x + 300, k.center().y), "NPC 1", "walk-left");
-  makeNpc(k, k.vec2(k.center().x - 300, k.center().y), "NPC 2", "walk-right");
-  makeNpc(k, k.vec2(k.center().x, k.center().y - 300), "NPC 3", "walk-down");
-  makeNpc(k, k.vec2(k.center().x, k.center().y + 300), "NPC 4", "walk-up");
-  makeNpc(k, k.vec2(k.center().x + 200, k.center().y - 200), "NPC 5", "walk-left-down");
+  // Create NPCs around the center with different idle directions and dialogues
+  makeNpc(
+    k,
+    k.vec2(k.center().x + 300, k.center().y),
+    "NPC 1",
+    "walk-left",
+    [
+      "Hello there, traveler!",
+      "Welcome to this strange world.",
+      "I hope you enjoy your stay.",
+    ]
+  );
+
+  makeNpc(
+    k,
+    k.vec2(k.center().x - 300, k.center().y),
+    "NPC 2",
+    "walk-right",
+    [
+      "Greetings!",
+      "Have you seen my friend around here?",
+      "They said they'd meet me by the tree.",
+      "Oh well, I'll keep waiting...",
+    ]
+  );
+
+  makeNpc(
+    k,
+    k.vec2(k.center().x, k.center().y - 300),
+    "NPC 3",
+    "walk-down",
+    [
+      "Hey! You look familiar.",
+      "Have we met before?",
+      "...No? Must be my imagination.",
+    ]
+  );
+
+  makeNpc(
+    k,
+    k.vec2(k.center().x, k.center().y + 300),
+    "NPC 4",
+    "walk-up",
+    [
+      "I've been standing here for hours.",
+      "My legs are getting tired.",
+      "But the view is worth it!",
+    ]
+  );
+
+  makeNpc(
+    k,
+    k.vec2(k.center().x + 200, k.center().y - 200),
+    "NPC 5",
+    "walk-left-down",
+    [
+      "Did you know?",
+      "This world is made of code.",
+      "Pretty cool, right?",
+      "Maybe one day I'll learn to code too!",
+    ]
+  );
 
   // Initialize the NPC interaction system
   initNpcInteractionSystem(k, player);
