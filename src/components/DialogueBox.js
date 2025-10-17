@@ -1,4 +1,4 @@
-export default function makeDialogueBox(k) {
+export default function makeDialogueBox(k, characterName = "") {
   const boxWidth = 700;
   const boxHeight = 150;
   const padding = 20;
@@ -38,7 +38,18 @@ export default function makeDialogueBox(k) {
     k.pos(0, 0),
   ]);
 
-  // Text display (white)
+  // Character name display (black)
+  const nameDisplay = dialogueBox.add([
+    k.text(characterName, {
+      font: "determination",
+      size: 20,
+    }),
+    k.color(k.Color.fromHex("#000000")),
+    k.anchor("topleft"),
+    k.pos(-boxWidth / 2 + padding, -boxHeight / 2 + padding),
+  ]);
+
+  // Text display (black, positioned below the name)
   const textDisplay = dialogueBox.add([
     k.text("", {
       font: "determination",
@@ -48,7 +59,7 @@ export default function makeDialogueBox(k) {
     }),
     k.color(k.Color.fromHex("#000000")),
     k.anchor("topleft"),
-    k.pos(-boxWidth / 2 + padding, -boxHeight / 2 + padding),
+    k.pos(-boxWidth / 2 + padding, -boxHeight / 2 + padding + 30),
   ]);
 
   // Function to start typing animation

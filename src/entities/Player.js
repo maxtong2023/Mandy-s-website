@@ -48,10 +48,34 @@ export default function makePlayer(k, posVec2, speed) {
     // Add offset to keep z-index positive
     player.z = player.pos.y + 10000;
 
-    if (!k.camPos().eq(player.pos)) {
+    // Clamp camera to stay within background bounds (256x256 pixels scaled by 8 = 2048 in game world)
+    const backgroundScale = 8;
+    const backgroundSize = 256 * backgroundScale; // 2048
+    const halfSize = backgroundSize / 2;
+    const center = k.center();
+    
+    // Calculate camera viewport size based on zoom
+    const camScale = k.camScale().x;
+    const viewportWidth = k.width() / camScale;
+    const viewportHeight = k.height() / camScale;
+    const halfViewportWidth = viewportWidth / 2;
+    const halfViewportHeight = viewportHeight / 2;
+    
+    // Calculate camera bounds
+    const minX = center.x - halfSize + halfViewportWidth;
+    const maxX = center.x + halfSize - halfViewportWidth;
+    const minY = center.y - halfSize + halfViewportHeight;
+    const maxY = center.y + halfSize - halfViewportHeight;
+    
+    // Clamp camera position to player position within bounds
+    const targetCamX = Math.max(minX, Math.min(maxX, player.pos.x));
+    const targetCamY = Math.max(minY, Math.min(maxY, player.pos.y));
+    const targetCamPos = k.vec2(targetCamX, targetCamY);
+
+    if (!k.camPos().eq(targetCamPos)) {
       k.tween(
         k.camPos(),
-        player.pos,
+        targetCamPos,
         0.2,
         (newPos) => k.camPos(newPos),
         k.easings.linear

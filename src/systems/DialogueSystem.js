@@ -19,7 +19,7 @@ export default function createDialogueSystem(k) {
 
     // Create dialogue box if it doesn't exist
     if (!dialogueBox) {
-      dialogueBox = makeDialogueBox(k);
+      dialogueBox = makeDialogueBox(k, npc.npcName);
     }
 
     // Show first dialogue

@@ -5,9 +5,9 @@ import {
   store,
 } from "../store";
 
-export default function makeNpc(k, posVec2, name, idleDirection = "walk-down", dialogue = []) {
+export default function makeNpc(k, posVec2, name, idleDirection = "walk-down", dialogue = [], spriteIndex = 0) {
   const npc = k.add([
-    k.sprite("player", { anim: `${idleDirection}-idle` }),
+    k.sprite("sprites", { frame: spriteIndex }),
     k.scale(8),
     k.anchor("center"),
     k.area({ shape: new k.Rect(k.vec2(0), 5, 10) }),
@@ -22,9 +22,6 @@ export default function makeNpc(k, posVec2, name, idleDirection = "walk-down", d
       dialogue: dialogue, // Array of dialogue sentences
     },
   ]);
-
-  // Play the idle animation on loop
-  npc.play(`${idleDirection}-idle`);
 
   // Update z-index based on Y position for proper layering
   // Add offset to keep z-index positive
