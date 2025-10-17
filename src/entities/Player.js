@@ -4,6 +4,7 @@ import {
   isProjectModalVisibleAtom,
   isSocialModalVisibleAtom,
   isDialogueActiveAtom,
+  isPuzzleActiveAtom,
   store,
 } from "../store";
 
@@ -86,9 +87,10 @@ export default function makePlayer(k, posVec2, speed) {
       store.get(isSocialModalVisibleAtom) ||
       store.get(isEmailModalVisibleAtom) ||
       store.get(isProjectModalVisibleAtom) ||
-      store.get(isDialogueActiveAtom)
+      store.get(isDialogueActiveAtom) ||
+      store.get(isPuzzleActiveAtom)
     ) {
-      // Force player to idle state when dialogue or modals are active
+      // Force player to idle state when dialogue, modals, or puzzles are active
       if (!player.getCurAnim().name.includes("idle")) {
         player.play(`${player.directionName}-idle`);
       }

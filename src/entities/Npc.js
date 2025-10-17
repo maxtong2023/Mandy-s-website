@@ -5,7 +5,7 @@ import {
   store,
 } from "../store";
 
-export default function makeNpc(k, posVec2, name, idleDirection = "walk-down", dialogue = [], spriteIndex = 0) {
+export default function makeNpc(k, posVec2, name, idleDirection = "walk-down", dialogue = [], spriteIndex = 0, puzzleData = null, givesPuzzlePiece = false) {
   const npc = k.add([
     k.sprite("sprites", { frame: spriteIndex }),
     k.scale(8),
@@ -20,6 +20,8 @@ export default function makeNpc(k, posVec2, name, idleDirection = "walk-down", d
       idleDirection: idleDirection,
       interactionIndicator: null,
       dialogue: dialogue, // Array of dialogue sentences
+      puzzleData: puzzleData, // Puzzle data if this NPC has a puzzle
+      givesPuzzlePiece: givesPuzzlePiece, // If true, gives puzzle piece on interaction
     },
   ]);
 

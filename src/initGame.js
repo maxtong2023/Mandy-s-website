@@ -4,6 +4,7 @@ import makeNpc from "./entities/Npc";
 import { PALETTE } from "./constants";
 import { cameraZoomValueAtom, store } from "./store";
 import initNpcInteractionSystem from "./systems/NpcInteractionSystem";
+import makePuzzlePieceUI from "./components/PuzzlePieceUI";
 
 export default async function initGame() {
 
@@ -120,6 +121,8 @@ export default async function initGame() {
 
   // Create NPCs around the center with different idle directions and dialogues
   // Sprite indices: 0=Andy, 1=Max, 2=Jiamin, 3=Lydia, 4=Cindy, 5=Bryan
+  
+  // NPCs that give puzzle pieces directly (Andy, Max, Jiamin)
   makeNpc(
     k,
     k.vec2(k.center().x + 300, k.center().y),
@@ -128,9 +131,11 @@ export default async function initGame() {
     [
       "Hello there, traveler!",
       "Welcome to this strange world.",
-      "I hope you enjoy your stay.",
+      "Here, take this puzzle piece!",
     ],
-    0 // Andy sprite
+    0, // Andy sprite
+    null, // No puzzle
+    true // Gives puzzle piece
   );
 
   makeNpc(
@@ -140,11 +145,12 @@ export default async function initGame() {
     "walk-right",
     [
       "Greetings!",
-      "Have you seen my friend around here?",
-      "They said they'd meet me by the tree.",
-      "Oh well, I'll keep waiting...",
+      "I found this puzzle piece earlier.",
+      "You can have it!",
     ],
-    1 // Max sprite
+    1, // Max sprite
+    null, // No puzzle
+    true // Gives puzzle piece
   );
 
   makeNpc(
@@ -155,22 +161,29 @@ export default async function initGame() {
     [
       "Hey! You look familiar.",
       "Have we met before?",
-      "...No? Must be my imagination.",
+      "Here's a puzzle piece for your journey!",
     ],
-    2 // Jiamin sprite
+    2, // Jiamin sprite
+    null, // No puzzle
+    true // Gives puzzle piece
   );
 
+  // NPCs with NYTimes-style puzzle games (Lydia, Cindy, Bryan)
   makeNpc(
     k,
     k.vec2(k.center().x, k.center().y + 300),
     "Lydia",
     "walk-up",
     [
-      "I've been standing here for hours.",
-      "My legs are getting tired.",
-      "But the view is worth it!",
+      "I love word games!",
+      "Want to play Wordle?",
+      "Guess the 5-letter word to earn a puzzle piece!",
     ],
-    3 // Lydia sprite
+    3, // Lydia sprite
+    {
+      type: "wordle",
+    },
+    false
   );
 
   makeNpc(
@@ -179,12 +192,15 @@ export default async function initGame() {
     "Cindy",
     "walk-left-down",
     [
-      "Did you know?",
-      "This world is made of code.",
-      "Pretty cool, right?",
-      "Maybe one day I'll learn to code too!",
+      "I'm obsessed with Connections!",
+      "Can you group these 16 words into 4 categories?",
+      "Each category has 4 words. Good luck!",
     ],
-    4 // Cindy sprite
+    4, // Cindy sprite
+    {
+      type: "connections",
+    },
+    false
   );
 
   makeNpc(
@@ -194,12 +210,19 @@ export default async function initGame() {
     "walk-right-up",
     [
       "Hey there!",
-      "I'm Bryan, nice to meet you!",
-      "I'm the 6th character in this world.",
+      "I do the Mini Crossword every morning!",
+      "Think you can solve mine?",
     ],
-    5 // Bryan sprite
+    5, // Bryan sprite
+    {
+      type: "crossword",
+    },
+    false
   );
 
   // Initialize the NPC interaction system
   initNpcInteractionSystem(k, player);
+
+  // Add puzzle piece UI
+  makePuzzlePieceUI(k);
 }

@@ -17,4 +17,8 @@ export const cameraZoomValueAtom = atom({ value: 1 });
 
 export const isDialogueActiveAtom = atom(false);
 
+export const puzzlePiecesAtom = atom(0);
+export const completedPuzzlesAtom = atom(new Set());
+export const isPuzzleActiveAtom = atom(false);
+
 export const store = createStore();
