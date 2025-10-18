@@ -1,10 +1,13 @@
 import makeKaplayCtx from "./kaplayCtx";
 import makePlayer from "./entities/Player";
 import makeNpc from "./entities/Npc";
+import makeInteractiveObject from "./entities/InteractiveObject";
 import { PALETTE } from "./constants";
 import { cameraZoomValueAtom, store } from "./store";
 import initNpcInteractionSystem from "./systems/NpcInteractionSystem";
+import initObjectInteractionSystem from "./systems/ObjectInteractionSystem";
 import makePuzzlePieceUI from "./components/PuzzlePieceUI";
+import makeInventoryUI from "./components/InventoryUI";
 
 export default async function initGame() {
 
@@ -40,6 +43,10 @@ export default async function initGame() {
     sliceX: 4,
     sliceY: 8,
   });
+
+  // Load interactive object sprites
+  k.loadSprite("habibi", "./sprites/habibi.png");
+  k.loadSprite("molly", "./sprites/molly.png");
 
   const setInitCamZoomValue = () => {
     if (k.width() < 1000) {
@@ -131,7 +138,7 @@ export default async function initGame() {
     [
       "Hello there, traveler!",
       "Welcome to this strange world.",
-      "Here, take this puzzle piece!",
+      "I'd love to help, but I need proof you've met Habibi first.",
     ],
     0, // Andy sprite
     null, // No puzzle
@@ -160,8 +167,8 @@ export default async function initGame() {
     "walk-down",
     [
       "Hey! You look familiar.",
-      "Have we met before?",
-      "Here's a puzzle piece for your journey!",
+      "I've been waiting for someone like you.",
+      "I can't give you anything until you've proven yourself to Molly.",
     ],
     2, // Jiamin sprite
     null, // No puzzle
@@ -220,9 +227,31 @@ export default async function initGame() {
     false
   );
 
-  // Initialize the NPC interaction system
-  initNpcInteractionSystem(k, player);
+  // Interactive objects (Habibi and Molly)
+  // Use existing backgroundSize and halfSize from walls section above
+  // Habibi in top-left corner
+  makeInteractiveObject(
+    k,
+    k.vec2(k.center().x - halfSize + 100, k.center().y - halfSize + 100),
+    "Habibi",
+    "habibi",
+    8 // Same scale as player
+  );
 
-  // Add puzzle piece UI
+  // Molly in bottom-right corner
+  makeInteractiveObject(
+    k,
+    k.vec2(k.center().x + halfSize - 100, k.center().y + halfSize - 100),
+    "Molly",
+    "molly",
+    8 // Same scale as player
+  );
+
+  // Initialize interaction systems
+  initNpcInteractionSystem(k, player);
+  initObjectInteractionSystem(k, player);
+
+  // Add UI
   makePuzzlePieceUI(k);
+  makeInventoryUI(k);
 }

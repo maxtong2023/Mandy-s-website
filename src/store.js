@@ -21,4 +21,8 @@ export const puzzlePiecesAtom = atom(0);
 export const completedPuzzlesAtom = atom(new Set());
 export const isPuzzleActiveAtom = atom(false);
 
+// Inventory system
+export const inventoryAtom = atom([]);
+export const completedMinigamesAtom = atom(new Set());
+
 export const store = createStore();

@@ -2,7 +2,7 @@ import makeDialogueBox from "../components/DialogueBox";
 import makeWordleGame from "../puzzles/WordleGame";
 import makeConnectionsGame from "../puzzles/ConnectionsGame";
 import makeMiniCrosswordGame from "../puzzles/MiniCrosswordGame";
-import { isDialogueActiveAtom, puzzlePiecesAtom, completedPuzzlesAtom, isPuzzleActiveAtom, store } from "../store";
+import { isDialogueActiveAtom, puzzlePiecesAtom, completedPuzzlesAtom, isPuzzleActiveAtom, inventoryAtom, store } from "../store";
 
 export default function createDialogueSystem(k) {
   let dialogueBox = null;
@@ -33,7 +33,31 @@ export default function createDialogueSystem(k) {
   const showCurrentDialogue = () => {
     if (!currentNpc || !dialogueBox) return;
 
-    const text = currentNpc.dialogue[currentDialogueIndex];
+    // Check if NPC has dynamic dialogue based on inventory
+    let dialogueToUse = currentNpc.dialogue;
+    if (currentNpc.npcName === "Andy") {
+      const inventory = store.get(inventoryAtom);
+      if (inventory.includes("Habibi Plate")) {
+        dialogueToUse = [
+          "Hello there, traveler!",
+          "Welcome to this strange world.",
+          "Oh! You have Habibi's plate! She must really trust you.",
+          "Here, take this puzzle piece!"
+        ];
+      }
+    } else if (currentNpc.npcName === "Jiamin") {
+      const inventory = store.get(inventoryAtom);
+      if (inventory.includes("Molly Tea")) {
+        dialogueToUse = [
+          "Hey! You look familiar.",
+          "I've been waiting for someone like you.",
+          "Molly's tea! You must have impressed her.",
+          "Here's a puzzle piece for your journey!"
+        ];
+      }
+    }
+
+    const text = dialogueToUse[currentDialogueIndex];
     canAdvance = false;
 
     dialogueBox.setText(text, () => {
@@ -69,14 +93,38 @@ export default function createDialogueSystem(k) {
           endDialogue();
           showPuzzle(npcForPuzzle);
         } else if (currentNpc.givesPuzzlePiece && !completedPuzzles.has(npcId)) {
-          // Give puzzle piece directly
-          const currentPieces = store.get(puzzlePiecesAtom);
-          store.set(puzzlePiecesAtom, currentPieces + 1);
-          
-          // Mark as completed
-          const newCompleted = new Set(completedPuzzles);
-          newCompleted.add(npcId);
-          store.set(completedPuzzlesAtom, newCompleted);
+          // Check item requirements for specific NPCs
+          const inventory = store.get(inventoryAtom);
+          let canGivePiece = false;
+          let itemToConsume = null;
+
+          if (npcId === "Andy") {
+            canGivePiece = inventory.includes("Habibi Plate");
+            itemToConsume = "Habibi Plate";
+          } else if (npcId === "Jiamin") {
+            canGivePiece = inventory.includes("Molly Tea");
+            itemToConsume = "Molly Tea";
+          } else {
+            // Other NPCs (Max) give pieces normally
+            canGivePiece = true;
+          }
+
+          if (canGivePiece) {
+            // Give puzzle piece
+            const currentPieces = store.get(puzzlePiecesAtom);
+            store.set(puzzlePiecesAtom, currentPieces + 1);
+            
+            // Mark as completed
+            const newCompleted = new Set(completedPuzzles);
+            newCompleted.add(npcId);
+            store.set(completedPuzzlesAtom, newCompleted);
+
+            // Consume the item if it's Andy or Jiamin
+            if (itemToConsume) {
+              const newInventory = inventory.filter(item => item !== itemToConsume);
+              store.set(inventoryAtom, newInventory);
+            }
+          }
           
           endDialogue();
         } else {
