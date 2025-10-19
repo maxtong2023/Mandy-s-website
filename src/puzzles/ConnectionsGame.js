@@ -79,10 +79,10 @@ export default function makeConnectionsGame(k, onComplete) {
 
   // Puzzle data - 4 categories
   const categories = [
-    { name: "Video Game Genres", color: "#f9df6d", words: ["ACTION", "RPG", "PUZZLE", "SPORTS"] },
-    { name: "Programming Languages", color: "#a0c35a", words: ["PYTHON", "JAVA", "RUST", "SWIFT"] },
-    { name: "Card Suits", color: "#b0c4ef", words: ["HEARTS", "CLUBS", "SPADES", "DIAMOND"] },
-    { name: "Social Media", color: "#ba81c5", words: ["TWITTER", "REDDIT", "DISCORD", "YOUTUBE"] },
+    { name: "Birthday Treats", color: "#f9df6d", words: ["CAKE", "CANDY", "ICE", "CREAM"] },
+    { name: "Party Decorations", color: "#a0c35a", words: ["BALLOON", "STREAMER", "BANNER", "CONFETTI"] },
+    { name: "Stuff We Will Get for Our House", color: "#b0c4ef", words: ["CORGI", "HOME GYM", "HOT TUB", "CAT"] },
+    { name: "Stuff You Can do At 21", color: "#ba81c5", words: ["CLUB", "DRINK", "RENT CAR", "HOTEL"] },
   ];
 
   // Shuffle all words

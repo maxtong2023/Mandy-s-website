@@ -78,7 +78,7 @@ export default function makeWordleGame(k, onComplete) {
   ]);
 
   // Game state
-  const targetWord = "GAMES"; // The answer
+  const targetWord = "LOVEU"; // The answer
   let currentGuess = "";
   let guesses = [];
   const maxGuesses = 6;

@@ -80,24 +80,24 @@ export default function makeMiniCrosswordGame(k, onComplete) {
   // 0 = black square, 1 = white square
   const grid = [
     [1, 1, 1, 1, 1],
-    [1, 0, 1, 0, 1],
+    [1, 0, 0, 1, 0],
     [1, 1, 1, 1, 1],
-    [1, 0, 1, 0, 1],
+    [1, 0, 0, 0, 0],
     [1, 1, 1, 1, 1],
   ];
 
   // Answers
   const answers = [
-    ["G", "A", "M", "E", "S"],
-    ["O", " ", "O", " ", "T"],
-    ["C", "O", "D", "E", "R"],
-    ["O", " ", "E", " ", "A"],
-    ["P", "I", "X", "E", "L"],
+    ["T", "O", "T", "E", "S"],
+    ["U", "", "", "V", ""],
+    ["L", "O", "V", "E", "R"],
+    ["I", "", "", "", ""],
+    ["P", "E", "I", "Q", "I"],
   ];
 
   // Clues
   const cluesText = gameContainer.add([
-    k.text("ACROSS:\n1. Activities for fun (5)\n3. Person who programs (5)\n5. Smallest image unit (5)\n\nDOWN:\n1. Search engine (6)\n2. Popular language (5)", {
+    k.text("ACROSS:\n1. Types of bags you wanted for your birthday(5)\n3. What I am to you (5)\n5. The first name of the person who loves you (5)\n\nDOWN:\n1. Your favorite flowers(6)\n 4. The day before a special day, like your birthday(3)", {
       font: "determination",
       size: 12,
       width: 280,

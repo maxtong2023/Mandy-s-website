@@ -3,10 +3,9 @@ import makePlayer from "./entities/Player";
 import makeNpc from "./entities/Npc";
 import makeInteractiveObject from "./entities/InteractiveObject";
 import { PALETTE } from "./constants";
-import { cameraZoomValueAtom, store } from "./store";
+import { store } from "./store";
 import initNpcInteractionSystem from "./systems/NpcInteractionSystem";
 import initObjectInteractionSystem from "./systems/ObjectInteractionSystem";
-import makePuzzlePieceUI from "./components/PuzzlePieceUI";
 import makeInventoryUI from "./components/InventoryUI";
 
 export default async function initGame() {
@@ -48,21 +47,8 @@ export default async function initGame() {
   k.loadSprite("habibi", "./sprites/habibi.png");
   k.loadSprite("molly", "./sprites/molly.png");
 
-  const setInitCamZoomValue = () => {
-    if (k.width() < 1000) {
-      k.camScale(k.vec2(0.5));
-      store.set(cameraZoomValueAtom, 0.5);
-      return;
-    }
-    k.camScale(k.vec2(0.8));
-    store.set(cameraZoomValueAtom, 0.8);
-  };
-  setInitCamZoomValue();
-
-  k.onUpdate(() => {
-    const cameraZoomValue = store.get(cameraZoomValueAtom);
-    if (cameraZoomValue !== k.camScale().x) k.camScale(k.vec2(cameraZoomValue));
-  });
+  // Set fixed camera scale
+  k.camScale(k.vec2(0.8));
 
   // Add the background image (256x256 pixels, scaled up by 8 like player sprites)
   const backgroundScale = 8;
@@ -132,13 +118,13 @@ export default async function initGame() {
   // NPCs that give puzzle pieces directly (Andy, Max, Jiamin)
   makeNpc(
     k,
-    k.vec2(k.center().x + 300, k.center().y),
+    k.vec2(k.center().x + 600, k.center().y +450),
     "Andy",
     "walk-left",
     [
-      "Hello there, traveler!",
-      "Welcome to this strange world.",
-      "I'd love to help, but I need proof you've met Habibi first.",
+      "Man I sure do love freshmen!",
+      "I enjoy blowing up the toilet, but I need Habibi In in order to do that.",
+      "I'll give you a puzzle piece if you bring me a Habibi plate, extra shwarma and extra white sauce.",
     ],
     0, // Andy sprite
     null, // No puzzle
@@ -147,13 +133,13 @@ export default async function initGame() {
 
   makeNpc(
     k,
-    k.vec2(k.center().x - 300, k.center().y),
+    k.vec2(k.center().x - 400, k.center().y - 500),
     "Max",
     "walk-right",
     [
-      "Greetings!",
-      "I found this puzzle piece earlier.",
-      "You can have it!",
+      "Hi Mandy, Happy Birthday!",
+      "Collect all the puzzle pieces and come back to me.",
+      "I'll give you a reward when you're finished.",
     ],
     1, // Max sprite
     null, // No puzzle
@@ -162,13 +148,13 @@ export default async function initGame() {
 
   makeNpc(
     k,
-    k.vec2(k.center().x, k.center().y - 300),
+    k.vec2(k.center().x + 600, k.center().y - 500),
     "Jiamin",
     "walk-down",
     [
-      "Hey! You look familiar.",
-      "I've been waiting for someone like you.",
-      "I can't give you anything until you've proven yourself to Molly.",
+      "Ugh.",
+      "I need Molly Tea, I haven't had any in 15 seconds..",
+      "I'm about to go into withdrawal. Bring me some Molly Tea and I'll give you a puzzle piece.",
     ],
     2, // Jiamin sprite
     null, // No puzzle
@@ -178,13 +164,13 @@ export default async function initGame() {
   // NPCs with NYTimes-style puzzle games (Lydia, Cindy, Bryan)
   makeNpc(
     k,
-    k.vec2(k.center().x, k.center().y + 300),
+    k.vec2(k.center().x- 600, k.center().y + 500),
     "Lydia",
     "walk-up",
     [
-      "I love word games!",
-      "Want to play Wordle?",
-      "Guess the 5-letter word to earn a puzzle piece!",
+      "Happy Bday Mandy.",
+      "Max told me how much you like Wordle. Can you solve this one?",
+      "I'll give you a puzzle piece if you solve it.",
     ],
     3, // Lydia sprite
     {
@@ -195,13 +181,13 @@ export default async function initGame() {
 
   makeNpc(
     k,
-    k.vec2(k.center().x + 200, k.center().y - 200),
+    k.vec2(k.center().x + -800, k.center().y +600),
     "Cindy",
     "walk-left-down",
     [
-      "I'm obsessed with Connections!",
-      "Can you group these 16 words into 4 categories?",
-      "Each category has 4 words. Good luck!",
+      "I could be playing Genshin Impact right now...",
+      "Solve this Connections puzzle quickly and I'll give you a puzzle piece.",
+      "Hurry...",
     ],
     4, // Cindy sprite
     {
@@ -212,13 +198,13 @@ export default async function initGame() {
 
   makeNpc(
     k,
-    k.vec2(k.center().x - 200, k.center().y + 200),
+    k.vec2(k.center().x+ 800, k.center().y + 350),
     "Bryan",
     "walk-right-up",
     [
-      "Hey there!",
-      "I do the Mini Crossword every morning!",
-      "Think you can solve mine?",
+      "AHH AHHHH!",
+      "I'M COOKED! I'M COOKED! I HAVE 10 LAB REPORTS DUE!!!",
+      "HELP ME FINISH THIS CROSSWORD SO I CAN GO TO LAB, I'M SO COOKED!!!",
     ],
     5, // Bryan sprite
     {
@@ -232,7 +218,7 @@ export default async function initGame() {
   // Habibi in top-left corner
   makeInteractiveObject(
     k,
-    k.vec2(k.center().x - halfSize + 100, k.center().y - halfSize + 100),
+    k.vec2(k.center().x - halfSize + 250, k.center().y - halfSize + 250),
     "Habibi",
     "habibi",
     8 // Same scale as player
@@ -241,7 +227,7 @@ export default async function initGame() {
   // Molly in bottom-right corner
   makeInteractiveObject(
     k,
-    k.vec2(k.center().x + halfSize - 100, k.center().y + halfSize - 100),
+    k.vec2(k.center().x + halfSize -250, k.center().y + halfSize- 250),
     "Molly",
     "molly",
     8 // Same scale as player
@@ -252,6 +238,5 @@ export default async function initGame() {
   initObjectInteractionSystem(k, player);
 
   // Add UI
-  makePuzzlePieceUI(k);
   makeInventoryUI(k);
 }

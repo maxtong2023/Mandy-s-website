@@ -1,4 +1,5 @@
 import makeDialogueBox from "../components/DialogueBox";
+import makeBirthdayLetter from "../components/BirthdayLetter";
 import makeWordleGame from "../puzzles/WordleGame";
 import makeConnectionsGame from "../puzzles/ConnectionsGame";
 import makeMiniCrosswordGame from "../puzzles/MiniCrosswordGame";
@@ -14,6 +15,29 @@ export default function createDialogueSystem(k) {
 
   const startDialogue = (npc) => {
     if (isDialogueActive || !npc.dialogue || npc.dialogue.length === 0) return;
+
+    // Special case for Max - if he has all 5 pieces, show birthday letter immediately
+    if (npc.npcName === "Max") {
+      const puzzlePieces = store.get(puzzlePiecesAtom);
+      const completedPuzzles = store.get(completedPuzzlesAtom);
+      
+      if (puzzlePieces >= 5 && !completedPuzzles.has("Max")) {
+        // Show birthday letter popup immediately
+        makeBirthdayLetter(k, () => {
+          // Letter closed, give puzzle piece and mark as completed
+          const currentPieces = store.get(puzzlePiecesAtom);
+          store.set(puzzlePiecesAtom, currentPieces + 1);
+          
+          const newCompleted = new Set(completedPuzzles);
+          newCompleted.add("Max");
+          store.set(completedPuzzlesAtom, newCompleted);
+          
+          // Resume normal gameplay
+          store.set(isDialogueActiveAtom, false);
+        });
+        return;
+      }
+    }
 
     currentNpc = npc;
     currentDialogueIndex = 0;
@@ -33,26 +57,26 @@ export default function createDialogueSystem(k) {
   const showCurrentDialogue = () => {
     if (!currentNpc || !dialogueBox) return;
 
-    // Check if NPC has dynamic dialogue based on inventory
+    // Check if NPC has dynamic dialogue based on inventory or puzzle pieces
     let dialogueToUse = currentNpc.dialogue;
     if (currentNpc.npcName === "Andy") {
       const inventory = store.get(inventoryAtom);
       if (inventory.includes("Habibi Plate")) {
         dialogueToUse = [
-          "Hello there, traveler!",
-          "Welcome to this strange world.",
-          "Oh! You have Habibi's plate! She must really trust you.",
-          "Here, take this puzzle piece!"
+          "You got Habibi?! Perfect.",
+          "This is just what I need to blow up the toilet.",
+          "I'm about to nuke it.",
+          "Here, you can have this puzzle piece, I guess."
         ];
       }
     } else if (currentNpc.npcName === "Jiamin") {
       const inventory = store.get(inventoryAtom);
       if (inventory.includes("Molly Tea")) {
         dialogueToUse = [
-          "Hey! You look familiar.",
-          "I've been waiting for someone like you.",
-          "Molly's tea! You must have impressed her.",
-          "Here's a puzzle piece for your journey!"
+          "Ugh it's about time.",
+          "I was about to make Frank get me one.",
+          "Here, have your puzzle piece."
+
         ];
       }
     }
@@ -105,7 +129,7 @@ export default function createDialogueSystem(k) {
             canGivePiece = inventory.includes("Molly Tea");
             itemToConsume = "Molly Tea";
           } else {
-            // Other NPCs (Max) give pieces normally
+            // Other NPCs give pieces normally
             canGivePiece = true;
           }
 
@@ -124,6 +148,7 @@ export default function createDialogueSystem(k) {
               const newInventory = inventory.filter(item => item !== itemToConsume);
               store.set(inventoryAtom, newInventory);
             }
+
           }
           
           endDialogue();
