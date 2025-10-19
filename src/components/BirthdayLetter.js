@@ -50,27 +50,24 @@ export default function makeBirthdayLetter(k, onClose) {
   // Letter content
   const letterText = `Dear Mandy,
 
-Happy 21st Birthday! I can't believe how fast time flies.
-You've grown into such an amazing person, and I'm so
-grateful to have you in my life.
+Happy 21st Birthday! I love you so much and really hope that you enjoyed
+the little game that I made for you. I appreciate you so much, and even though
+I wasn't able to see you on Saturday, I hope that you enjoy your gifts and our time 
+together on Sunday.
 
-This past year has been filled with incredible memories,
-and I can't wait to create many more with you. You bring
-so much joy, laughter, and love into my life every single day.
+The past almost two years with you have been incredible and I can't wait 
+to spend many more with you. You truly are a ball of sunshine and I look forward
+to growing old with you and seeing how our lives change together.
 
-On this special day, I want you to know how much you mean
-to me. You're not just my partner, but my best friend,
-my adventure buddy, and the person I want to spend
-forever with.
+I hope you enjoy your birthday, 21 is a big milestone. Know that I will always support
+you, be proud of you, and be there for you.
 
-Here's to your 21st year - may it be filled with happiness,
-success, and all the wonderful things you deserve.
 
-I love you more than words can say.
 
-Happy Birthday, my love! ❤️
+I love you!
 
-With all my love,
+Happy Birthday, Mandy!
+
 Max`;
 
   letterContainer.add([

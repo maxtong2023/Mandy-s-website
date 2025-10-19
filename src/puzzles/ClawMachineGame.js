@@ -68,7 +68,7 @@ export default function makeClawMachineGame(k, onComplete) {
   // Game state
   let currentLevel = 1;
   const maxLevel = 5;
-  const levelSpeeds = [150, 250, 400, 600, 700]; // Level 5 is fast but not impossible
+  const levelSpeeds = [120, 180, 250, 350, 450]; // Easier speeds - slower progression
   let clawSpeed = levelSpeeds[0];
 
   // Level display
@@ -79,7 +79,7 @@ export default function makeClawMachineGame(k, onComplete) {
     }),
     k.color(k.Color.fromHex("#FFD700")),
     k.anchor("center"),
-    k.pos(0, -220),
+    k.pos(0, boxHeight / 2 - 30), // Bottom center
   ]);
 
   // Instructions
@@ -118,7 +118,7 @@ export default function makeClawMachineGame(k, onComplete) {
   // Prize (plate emoji or box)
   const prizeStartY = gameAreaY + gameAreaHeight / 2 - 40;
   const prize = gameContainer.add([
-    k.rect(40, 40),
+    k.rect(50, 50), // Larger prize - was 40x40
     k.color(k.Color.fromHex("#FFD700")),
     k.outline(2, k.Color.fromHex("#FFA500")),
     k.anchor("center"),
@@ -128,7 +128,7 @@ export default function makeClawMachineGame(k, onComplete) {
   prize.add([
     k.text("🍽️", {
       font: "determination",
-      size: 24,
+      size: 28, // Larger emoji - was 24
     }),
     k.anchor("center"),
     k.pos(0, 0),
@@ -161,10 +161,10 @@ export default function makeClawMachineGame(k, onComplete) {
   // Claw grabber
   const clawGrabber = claw.add([
     k.polygon([
-      k.vec2(-15, 0),
-      k.vec2(15, 0),
-      k.vec2(10, 20),
-      k.vec2(-10, 20),
+      k.vec2(-20, 0),  // Wider claw - was -15
+      k.vec2(20, 0),   // Wider claw - was 15
+      k.vec2(15, 20),  // Adjusted for wider claw
+      k.vec2(-15, 20), // Adjusted for wider claw
     ]),
     k.color(k.Color.fromHex("#FF6B6B")),
     k.outline(2, k.Color.fromHex("#FFFFFF")),

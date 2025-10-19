@@ -91,7 +91,8 @@ export default function makePlayer(k, posVec2, speed) {
       store.get(isPuzzleActiveAtom)
     ) {
       // Force player to idle state when dialogue, modals, or puzzles are active
-      if (!player.getCurAnim().name.includes("idle")) {
+      const currentAnim = player.getCurAnim();
+      if (currentAnim && !currentAnim.name.includes("idle")) {
         player.play(`${player.directionName}-idle`);
       }
       return;
@@ -104,11 +105,11 @@ export default function makePlayer(k, posVec2, speed) {
       player.direction = worldMousePos.sub(player.pos).unit();
     }
 
-    if (
-      player.direction.eq(k.vec2(0, 0)) &&
-      !player.getCurAnim().name.includes("idle")
-    ) {
-      player.play(`${player.directionName}-idle`);
+    if (player.direction.eq(k.vec2(0, 0))) {
+      const currentAnim = player.getCurAnim();
+      if (currentAnim && !currentAnim.name.includes("idle")) {
+        player.play(`${player.directionName}-idle`);
+      }
       return;
     }
 
@@ -161,7 +162,8 @@ export default function makePlayer(k, posVec2, speed) {
     )
       player.directionName = "walk-right-down";
 
-    if (player.getCurAnim().name !== player.directionName) {
+    const currentAnim = player.getCurAnim();
+    if (currentAnim && currentAnim.name !== player.directionName) {
       player.play(player.directionName);
     }
 

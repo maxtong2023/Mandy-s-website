@@ -14,9 +14,7 @@ export default function createDialogueSystem(k) {
   let canAdvance = false;
 
   const startDialogue = (npc) => {
-    if (isDialogueActive || !npc.dialogue || npc.dialogue.length === 0) return;
-
-    // Special case for Max - if he has all 5 pieces, show birthday letter immediately
+    // Special case for Max - check BEFORE isDialogueActive check
     if (npc.npcName === "Max") {
       const puzzlePieces = store.get(puzzlePiecesAtom);
       const completedPuzzles = store.get(completedPuzzlesAtom);
@@ -38,6 +36,8 @@ export default function createDialogueSystem(k) {
         return;
       }
     }
+
+    if (isDialogueActive || !npc.dialogue || npc.dialogue.length === 0) return;
 
     currentNpc = npc;
     currentDialogueIndex = 0;

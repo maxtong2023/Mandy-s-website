@@ -143,7 +143,7 @@ export default async function initGame() {
     ],
     1, // Max sprite
     null, // No puzzle
-    true // Gives puzzle piece
+    false // Does NOT give puzzle piece through normal flow - only through birthday letter
   );
 
   makeNpc(

@@ -90,7 +90,7 @@ export default function makeCupFillingGame(k, onComplete) {
       font: "determination",
       size: 20,
     }),
-    k.color(k.Color.fromHex("#FFFFFF")),
+    k.color(k.Color.fromHex("#000000")), // Black text
     k.anchor("center"),
     k.pos(-150, -200),
   ]);
@@ -100,7 +100,7 @@ export default function makeCupFillingGame(k, onComplete) {
       font: "determination",
       size: 20,
     }),
-    k.color(k.Color.fromHex("#FFFFFF")),
+    k.color(k.Color.fromHex("#000000")), // Black text
     k.anchor("center"),
     k.pos(150, -200),
   ]);
@@ -110,7 +110,7 @@ export default function makeCupFillingGame(k, onComplete) {
       font: "determination",
       size: 14,
     }),
-    k.color(k.Color.fromHex("#FFFFFF")),
+    k.color(k.Color.fromHex("#000000")), // Black text
     k.anchor("center"),
     k.pos(0, -160),
   ]);
